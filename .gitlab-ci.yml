@@ -1,0 +1,19 @@
+stages:
+  - check
+  - test
+
+cache:
+  paths:
+    - target/
+
+check:
+  stage: check
+  image: rust:latest
+  script:
+    - cargo check --verbose
+
+test:
+  stage: test
+  image: rust:latest
+  script:
+    - cargo test --verbose
