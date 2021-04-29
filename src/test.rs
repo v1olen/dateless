@@ -1,7 +1,6 @@
-
 #[cfg(test)]
 mod tests {
-    use crate::*;
+    use crate::prelude::*;
     use chrono::{Duration, Utc};
 
     #[test]

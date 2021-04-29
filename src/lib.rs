@@ -1,8 +1,6 @@
 mod calendar;
 mod event;
-
-pub use calendar::*;
-pub use event::*;
+pub mod prelude;
 
 #[cfg(test)]
 mod test;
