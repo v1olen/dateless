@@ -5,6 +5,7 @@ authors = ["v1olen <v1olen@v-sn.io>"]
 edition = "2018"
 description = "..."
 license = "Apache-2.0"
+repository = "https://gitlab.com/v1olen/dateless"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
