@@ -49,6 +49,26 @@ impl Calendar {
         self.events.push(event);
     }
 
+    /**
+       Returns `Vec` of `EventOccurrence`s for the given day.
+
+       # Examples
+
+       ```rust
+       use dateless::prelude::*;
+       use chrono::Utc;
+
+       let mut calendar = Calendar::new();
+
+       calendar.add_event(
+           EventPartial::new(String::from("Anne's birthday"))
+               .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+               .complete()
+       );
+
+       let events_today = calendar.day(Utc::today());
+       ```
+    */
     pub fn day(&self, date: Date<Utc>) -> Vec<EventOccurrence> {
         self.events
             .iter()
