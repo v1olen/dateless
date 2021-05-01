@@ -7,6 +7,22 @@ pub struct Calendar {
 }
 
 impl Calendar {
+    /**
+       Creates new empty `Calendar` instance. It is equivalent to:
+
+       ```rust
+       # use dateless::Calendar;
+       let instance: Calendar = Default::default();
+       ```
+
+       # Examples
+
+       ```rust
+       use dateless::Calendar;
+
+       let calendar: Calendar = Default::default();
+       ```
+    */
     pub fn new() -> Self {
         Default::default()
     }
