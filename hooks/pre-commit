@@ -1,3 +1,9 @@
-#!/bin/sh
+#!/usr/local/bin/rustscript
 
-exec cargo fmt
+#[macro_use] extern crate shells;
+
+use std::process;
+
+let (code, stdout, _stderr) = sh!("cargo fmt");
+println!("Code has benn formatted");
+process::exit(code);
