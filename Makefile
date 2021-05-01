@@ -1,4 +1,4 @@
-setup: git_setup configure_sccache enable_incremental_compilation
+setup: git_setup configure_sccache enable_incremental_compilation install_rustscript
 
 git_setup: set_hooks
 	git config --global pull.rebase true
@@ -12,6 +12,12 @@ configure_sccache: create_cargo_config install_sccache
 
 install_sccache:
 	which sccache || cargo install sccache
+
+install_rustscript:
+	@which rustscript >> /dev/null || echo 'Installing rustscript...'
+	@which rustscript >> /dev/null || cargo install --git https://github.com/faern/rustscript
+	@which rustscript >> /dev/null || echo 'Auth as root to symlink `rustscript` to `/usr`'
+	@which rustscript >> /dev/null || sudo ln -s ~/.cargo/bin/rustscript /usr/local/bin/
 
 create_cargo_config:
 	mkdir -p .cargo
