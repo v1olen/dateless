@@ -85,6 +85,9 @@ It prints to `stdout`:
 
 */
 
+#[macro_use]
+mod codegen;
+
 mod calendar;
 mod event;
 pub mod prelude;

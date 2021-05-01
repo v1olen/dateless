@@ -69,34 +69,11 @@ impl Event {
 }
 
 impl EventPartial {
-    pub fn new<T: ToString>(name: T) -> Self {
-        let name = Some(name.to_string());
-        Self {
-            name,
-            ..Default::default()
-        }
-    }
+    bind_partial_filler_default!(new, name);
 
-    pub fn with_description<T: ToString>(self, description: T) -> Self {
-        let description = Some(description.to_string());
-
-        Self {
-            description,
-            ..self
-        }
-    }
-
-    pub fn with_period(self, period: EventPeriod) -> Self {
-        let period = Some(period);
-
-        Self { period, ..self }
-    }
-
-    pub fn with_cyclicity(self, cyclicity: EventCyclicity) -> Self {
-        let cyclicity = Some(cyclicity);
-
-        Self { cyclicity, ..self }
-    }
+    bind_partial_filler!(with_description, description);
+    bind_partial_filler!(with_period, period, EventPeriod);
+    bind_partial_filler!(with_cyclicity, cyclicity, EventCyclicity);
 
     pub fn complete(self) -> Event {
         let mut event: Event = Default::default();
