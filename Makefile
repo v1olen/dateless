@@ -1,17 +1,23 @@
 setup: git_setup configure_sccache enable_incremental_compilation install_rustscript
+	@echo "Done."
 
 git_setup: set_hooks
-	git config --global pull.rebase true
+	@echo "Setting up git settings..."
+	@git config --global pull.rebase true
 
 set_hooks:
-	git config core.hooksPath hooks
+	@echo "Setting up hooks path..."
+	@git config core.hooksPath hooks
 
 configure_sccache: create_cargo_config install_sccache
-	echo "[build]" >> .cargo/config.toml
-	echo "rustc-wrapper = \"`which sccache`\"" >> .cargo/config.toml
+	@echo "Configuring sccache..."
+	@echo "[build]" >> .cargo/config.toml
+	@echo "rustc-wrapper = \"`which sccache`\"" >> .cargo/config.toml
 
 install_sccache:
-	which sccache || cargo install sccache
+	@which sccache >> /dev/null || echo "Installing sccache..."
+	@which sccache >> /dev/null || cargo install sccache
+	@which sccache >> /dev/null || cargo install sccache
 
 install_rustscript:
 	@which rustscript >> /dev/null || echo 'Installing rustscript...'
@@ -20,9 +26,11 @@ install_rustscript:
 	@which rustscript >> /dev/null || sudo ln -s ~/.cargo/bin/rustscript /usr/local/bin/
 
 create_cargo_config:
-	mkdir -p .cargo
-	echo|tr -d \\n > .cargo/config.toml
+	@echo "Creating .cargo for local config..."
+	@mkdir -p .cargo
+	@echo|tr -d \\n > .cargo/config.toml
 
 enable_incremental_compilation: create_cargo_config
-	echo "[profile.debug]" >> .cargo/config.toml
-	echo "incremental = true" >> .cargo/config.toml
+	@echo "Enabling incremental compilation..."
+	@echo "[profile.debug]" >> .cargo/config.toml
+	@echo "incremental = true" >> .cargo/config.toml
