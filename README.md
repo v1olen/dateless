@@ -26,10 +26,42 @@
 
 Dateless is an events & calendar library for Rust.
 
-## Examples
+## Usage
 
-Soon
+```rust
+use dateless::prelude::*;
+use chrono::{Utc, Duration};
 
+fn main() {
+    let calendar = Calendar::new();
+
+    let event = EventPartial::new(String::from("Anne's birthday"))
+        .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+        .with_cyclicity(EventCyclicity::EveryWeek)
+        .complete();
+
+    let calendar = calendar.add_event(event);
+
+    let seven_days_later = Utc::today() + Duration::days(7);
+
+    println!("{:#?}", calendar.day(seven_days_later));
+}
+```
+
+It prints to `stdout`:
+
+```json
+[
+    EventOccurance {
+        name: "Anne's birthday",
+        description: None,
+        period: WholeDays(
+            2021-05-08Z,
+            2021-05-08Z,
+        ),
+    },
+]
+```
 
 ## Contribution
 
