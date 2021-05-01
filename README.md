@@ -30,9 +30,6 @@ Dateless is an events & calendar library for Rust.
 
 Soon
 
-## Requirements
-
-Soon
 
 ## Contribution
 
