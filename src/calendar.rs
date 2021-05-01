@@ -27,6 +27,24 @@ impl Calendar {
         Default::default()
     }
 
+    /**
+       Adds passed event to the instance.
+
+       # Examples
+
+       ```rust
+       use dateless::prelude::*;
+       use chrono::Utc;
+
+       let mut calendar = Calendar::new();
+
+       calendar.add_event(
+           EventPartial::new(String::from("Anne's birthday"))
+               .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+               .complete()
+       );
+       ```
+    */
     pub fn add_event(&mut self, event: Event) {
         self.events.push(event);
     }
