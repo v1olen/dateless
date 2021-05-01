@@ -1,4 +1,4 @@
-use super::event::{Event, occurrence::EventOccurrence};
+use super::event::{occurrence::EventOccurrence, Event};
 use chrono::{Date, Utc};
 
 #[derive(Debug, Default)]
@@ -11,9 +11,8 @@ impl Calendar {
         Default::default()
     }
 
-    pub fn add_event(mut self, event: Event) -> Self {
-        &self.events.push(event);
-        self
+    pub fn add_event(&mut self, event: Event) {
+        self.events.push(event);
     }
 
     pub fn day(&self, date: Date<Utc>) -> Vec<EventOccurrence> {
