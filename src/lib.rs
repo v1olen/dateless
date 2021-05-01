@@ -12,7 +12,7 @@ First, add `dateless` as a dependency in your project's Cargo.toml:
 
 ```toml
 [dependencies]
-dateless = "0.2.0"
+dateless = "0.2.1"
 ```
 
 And then, you can start with creating a calendar:
