@@ -3,7 +3,7 @@ name = "dateless"
 version = "0.2.1"
 authors = ["v1olen <v1olen@v-sn.io>"]
 edition = "2018"
-description = "..."
+description = "Events & calendar library for Rust"
 license = "Apache-2.0"
 repository = "https://gitlab.com/v1olen/dateless"
 
@@ -12,5 +12,3 @@ repository = "https://gitlab.com/v1olen/dateless"
 [dependencies]
 chrono = "0.4.19"
 optional_struct = "0.2.0"
-
-[dev-dependencies]
