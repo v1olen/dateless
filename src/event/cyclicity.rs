@@ -48,7 +48,7 @@ pub struct EventWeekCyclicityTable {
     wednesday: bool,
     thursday: bool,
     friday: bool,
-    satuday: bool,
+    saturday: bool,
     sunday: bool,
 }
 
