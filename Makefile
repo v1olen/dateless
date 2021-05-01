@@ -1,4 +1,4 @@
-init: git_setup configure_sccache enable_incremental_compilation
+setup: git_setup configure_sccache enable_incremental_compilation
 
 git_setup: set_hooks
 	git config --global pull.rebase true
