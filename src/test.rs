@@ -5,7 +5,7 @@ mod tests {
 
     #[test]
     fn one_day_and_one_time_date() {
-        let calendar = Calendar::new();
+        let mut calendar = Calendar::new();
 
         let today = Utc::today();
         let yesterday = today - Duration::days(1);
@@ -15,7 +15,7 @@ mod tests {
             .with_period(EventPeriod::WholeDays(today, today))
             .complete();
 
-        let calendar = calendar.add_event(event);
+        calendar.add_event(event);
 
         let expected_occurrence = vec![EventOccurrence {
             name: "Date".into(),
@@ -30,7 +30,7 @@ mod tests {
 
     #[test]
     fn one_hour_and_one_time_date() {
-        let calendar = Calendar::new();
+        let mut calendar = Calendar::new();
 
         let today = Utc::today();
         let yesterday = today - Duration::days(1);
@@ -41,7 +41,7 @@ mod tests {
             .with_period(EventPeriod::StartEnd(date_start, date_end))
             .complete();
 
-        let calendar = calendar.add_event(event);
+        calendar.add_event(event);
 
         let expected_occurrence = vec![EventOccurrence {
             name: "Date".into(),

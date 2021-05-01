@@ -33,14 +33,14 @@ use dateless::prelude::*;
 use chrono::{Utc, Duration};
 
 fn main() {
-    let calendar = Calendar::new();
+    let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
         .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
         .with_cyclicity(EventCyclicity::EveryWeek)
         .complete();
 
-    let calendar = calendar.add_event(event);
+    calendar.add_event(event);
 
     let seven_days_later = Utc::today() + Duration::days(7);
 

@@ -21,7 +21,7 @@ And then, you can start with creating a calendar:
 use dateless::prelude::*;
 
 fn main() {
-    let calendar = Calendar::new();
+    let mut calendar = Calendar::new();
 }
 ```
 
@@ -32,14 +32,14 @@ use dateless::prelude::*;
 use chrono::Utc;
 
 fn main() {
-    let calendar = Calendar::new();
+    let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
         .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
         .with_cyclicity(EventCyclicity::EveryWeek)
         .complete();
 
-    let calendar = calendar.add_event(event);
+    calendar.add_event(event);
 }
 ```
 
@@ -53,14 +53,14 @@ use dateless::prelude::*;
 use chrono::{Utc, Duration};
 
 fn main() {
-    let calendar = Calendar::new();
+    let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
         .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
         .with_cyclicity(EventCyclicity::EveryWeek)
         .complete();
 
-    let calendar = calendar.add_event(event);
+    calendar.add_event(event);
 
     let seven_days_later = Utc::today() + Duration::days(7);
 
@@ -85,7 +85,6 @@ It prints to `stdout`:
 
 */
 
-
 mod calendar;
 mod event;
 pub mod prelude;
@@ -97,4 +96,4 @@ mod test;
 extern crate optional_struct;
 
 pub use calendar::Calendar;
-pub use event::{EventPartial, EventPeriod, EventCyclicity, EventOccurrence};
+pub use event::{EventCyclicity, EventOccurrence, EventPartial, EventPeriod};
