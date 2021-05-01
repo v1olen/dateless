@@ -9,6 +9,8 @@
 <div align="center">
   <em color="#aaa"></em>
   <br>
+  <a href="https://gitlab.com/v1olen/dateless/-/blob/master/LICENSE">
+  <img alt="license" src="https://img.shields.io/crates/l/dateless"></a>
   <br>
   <br>
 </div>
