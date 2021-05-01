@@ -72,7 +72,7 @@ It prints to `stdout`:
 
 ```json
 [
-    EventOccurance {
+    EventOccurrence {
         name: "Anne's birthday",
         description: None,
         period: WholeDays(
@@ -97,4 +97,4 @@ mod test;
 extern crate optional_struct;
 
 pub use calendar::Calendar;
-pub use event::{EventPartial, EventPeriod, EventCyclicity, EventOccurance};
+pub use event::{EventPartial, EventPeriod, EventCyclicity, EventOccurrence};

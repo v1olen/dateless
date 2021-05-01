@@ -38,7 +38,7 @@ pub enum EventCustomCyclicity {
 #[derive(Debug)]
 pub enum EventCyclicityEnd {
     OnDay(Date<Utc>),
-    AfterNOccurences(u64),
+    AfterNOccurrences(u64),
 }
 
 #[derive(Debug)]

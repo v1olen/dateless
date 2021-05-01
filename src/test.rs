@@ -17,15 +17,15 @@ mod tests {
 
         let calendar = calendar.add_event(event);
 
-        let expected_occurance = vec![EventOccurance {
+        let expected_occurrence = vec![EventOccurrence {
             name: "Date".into(),
             description: None,
             period: EventPeriod::WholeDays(today, today),
         }];
 
-        assert_ne!(calendar.day(yesterday), expected_occurance);
-        assert_eq!(calendar.day(today), expected_occurance);
-        assert_ne!(calendar.day(tomorrow), expected_occurance);
+        assert_ne!(calendar.day(yesterday), expected_occurrence);
+        assert_eq!(calendar.day(today), expected_occurrence);
+        assert_ne!(calendar.day(tomorrow), expected_occurrence);
     }
 
     #[test]
@@ -43,14 +43,14 @@ mod tests {
 
         let calendar = calendar.add_event(event);
 
-        let expected_occurance = vec![EventOccurance {
+        let expected_occurrence = vec![EventOccurrence {
             name: "Date".into(),
             description: None,
             period: EventPeriod::StartEnd(date_start, date_end),
         }];
 
-        assert_ne!(calendar.day(yesterday), expected_occurance);
-        assert_eq!(calendar.day(today), expected_occurance);
-        assert_ne!(calendar.day(tomorrow), expected_occurance);
+        assert_ne!(calendar.day(yesterday), expected_occurrence);
+        assert_eq!(calendar.day(today), expected_occurrence);
+        assert_ne!(calendar.day(tomorrow), expected_occurrence);
     }
 }

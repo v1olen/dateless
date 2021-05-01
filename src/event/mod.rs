@@ -1,10 +1,10 @@
 mod cyclicity;
-pub mod occurance;
+pub mod occurrence;
 mod period;
 
 use chrono::{Date, Utc};
 
-pub use self::{cyclicity::EventCyclicity, occurance::EventOccurance, period::EventPeriod};
+pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::EventPeriod};
 
 #[derive(OptionalStruct, Debug, Default)]
 #[optional_name = "EventPartial"]
@@ -17,9 +17,9 @@ pub struct Event {
 }
 
 impl Event {
-    pub fn get_occurence_at(&self, date: Date<Utc>) -> Option<EventOccurance> {
+    pub fn get_occurrence_at(&self, date: Date<Utc>) -> Option<EventOccurrence> {
         if self.period.contains(date) {
-            return Some(self.create_occurence(&self.period));
+            return Some(self.create_occurrence(&self.period));
         }
 
         if let Some(cyclicity) = &self.cyclicity {
@@ -29,25 +29,25 @@ impl Event {
                 match cyclicity {
                     EveryDay => {
                         return Some(
-                            self.create_occurence(&self.period.same_with_new_start_day(date)),
+                            self.create_occurrence(&self.period.same_with_new_start_day(date)),
                         );
                     }
                     EveryWeek => {
                         let new_start = &self.period.same_with_new_start_week(date);
                         if let Some(new_start) = new_start {
-                            return Some(self.create_occurence(&new_start));
+                            return Some(self.create_occurrence(&new_start));
                         }
                     }
                     EveryMonth => {
                         let new_start = &self.period.same_with_new_start_month(date);
                         if let Some(new_start) = new_start {
-                            return Some(self.create_occurence(&new_start));
+                            return Some(self.create_occurrence(&new_start));
                         }
                     }
                     EveryYear => {
                         let new_start = &self.period.same_with_new_start_year(date);
                         if let Some(new_start) = new_start {
-                            return Some(self.create_occurence(&new_start));
+                            return Some(self.create_occurrence(&new_start));
                         }
                     }
                     Custom(_) => {
@@ -59,8 +59,8 @@ impl Event {
         None
     }
 
-    fn create_occurence(&self, period: &EventPeriod) -> EventOccurance {
-        return EventOccurance {
+    fn create_occurrence(&self, period: &EventPeriod) -> EventOccurrence {
+        return EventOccurrence {
             name: self.name.clone(),
             description: self.description.clone(),
             period: period.clone(),

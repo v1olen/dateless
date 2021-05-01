@@ -52,7 +52,7 @@ It prints to `stdout`:
 
 ```json
 [
-    EventOccurance {
+    EventOccurrence {
         name: "Anne's birthday",
         description: None,
         period: WholeDays(
