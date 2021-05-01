@@ -24,7 +24,7 @@
 
 # Dateless
 
-Events & Calendar library
+Dateless is an events & calendar library for Rust.
 
 ## Examples
 
