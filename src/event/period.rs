@@ -83,14 +83,14 @@ impl EventPeriod {
         let period = self.clone();
         use chrono::Datelike;
 
-        let (starting_monthday, ending_monthday) = match period {
+        let (starting_month_day, ending_month_day) = match period {
             Self::StartEnd(start, end) => (start.date().day(), end.date().day()),
             Self::WholeDays(start, end) => (start.day(), end.day()),
         };
 
         match new_date.day() {
-            value if value >= starting_monthday && value <= ending_monthday => {
-                let day_difference = (value - starting_monthday) as i64;
+            value if value >= starting_month_day && value <= ending_month_day => {
+                let day_difference = (value - starting_month_day) as i64;
                 let new_date = new_date - Duration::days(day_difference);
 
                 Some(self.same_with_new_start_day(new_date))
@@ -103,33 +103,36 @@ impl EventPeriod {
         let period = self.clone();
         use chrono::Datelike;
 
-        let ((starting_month, starting_monthday), (ending_month, ending_monthday), day_difference) =
-            match period {
-                Self::StartEnd(start, end) => (
-                    (start.date().month(), start.date().day()),
-                    (end.date().month(), end.date().day()),
-                    new_date
-                        - Date::from_utc(
-                            NaiveDate::from_ymd(
-                                start.date().year(),
-                                new_date.month(),
-                                start.date().day(),
-                            ),
-                            Utc,
+        let (
+            (starting_month, starting_month_day),
+            (ending_month, ending_month_day),
+            day_difference,
+        ) = match period {
+            Self::StartEnd(start, end) => (
+                (start.date().month(), start.date().day()),
+                (end.date().month(), end.date().day()),
+                new_date
+                    - Date::from_utc(
+                        NaiveDate::from_ymd(
+                            start.date().year(),
+                            new_date.month(),
+                            start.date().day(),
                         ),
-                ),
-                Self::WholeDays(start, end) => (
-                    (start.month(), start.day()),
-                    (end.month(), end.day()),
-                    new_date
-                        - Date::from_utc(
-                            NaiveDate::from_ymd(start.year(), new_date.month(), start.day()),
-                            Utc,
-                        ),
-                ),
-            };
+                        Utc,
+                    ),
+            ),
+            Self::WholeDays(start, end) => (
+                (start.month(), start.day()),
+                (end.month(), end.day()),
+                new_date
+                    - Date::from_utc(
+                        NaiveDate::from_ymd(start.year(), new_date.month(), start.day()),
+                        Utc,
+                    ),
+            ),
+        };
 
-        if new_date.day() < starting_monthday || new_date.day() > ending_monthday {
+        if new_date.day() < starting_month_day || new_date.day() > ending_month_day {
             return None;
         }
 
