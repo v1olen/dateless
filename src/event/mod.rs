@@ -3,10 +3,13 @@ pub mod occurrence;
 mod period;
 
 use chrono::{Date, Utc};
+#[cfg(feature = "serde_support")]
+use serde::{Deserialize, Serialize};
 
 pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::EventPeriod};
 
 #[derive(OptionalStruct, Debug, Default)]
+#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
 #[optional_name = "EventPartial"]
 #[optional_derive(Debug, Default)]
 pub struct Event {

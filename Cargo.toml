@@ -10,5 +10,14 @@ repository = "https://gitlab.com/v1olen/dateless"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-chrono = "0.4.19"
+chrono = { version = "0.4.19", features = ["serde"] }
 optional_struct = "0.2.0"
+serde = { optional = true, version = "1.0.125", features = ["derive"] }
+
+[target.'cfg(feature = "serde_support")'.dependencies]
+chrono  = { optional = true, version = "0.4.19", features = ["serde"] }
+
+[features]
+default = []
+
+serde_support = ["serde", "chrono"]

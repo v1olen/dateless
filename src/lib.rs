@@ -95,6 +95,9 @@ pub mod prelude;
 #[cfg(test)]
 mod test;
 
+#[cfg(feature = "serde_support")]
+mod serde;
+
 #[macro_use]
 extern crate optional_struct;
 

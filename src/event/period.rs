@@ -1,10 +1,40 @@
 use chrono::{Date, DateTime, Duration, NaiveDate, Utc};
 
+#[cfg(feature = "serde_support")]
+use chrono::serde::ts_seconds;
+
+#[cfg(feature = "serde_support")]
+use serde::{Deserialize, Serialize};
+
+#[cfg(feature = "serde_support")]
+use crate::serde::{from_date_into_string, from_string_into_date};
+
 #[derive(Debug, Clone)]
+#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
 #[cfg_attr(test, derive(PartialEq))]
 pub enum EventPeriod {
-    StartEnd(DateTime<Utc>, DateTime<Utc>),
-    WholeDays(Date<Utc>, Date<Utc>),
+    StartEnd(
+        #[cfg_attr(feature = "serde_support", serde(with = "ts_seconds"))] DateTime<Utc>,
+        #[cfg_attr(feature = "serde_support", serde(with = "ts_seconds"))] DateTime<Utc>,
+    ),
+    WholeDays(
+        #[cfg_attr(
+            feature = "serde_support",
+            serde(
+                serialize_with = "from_date_into_string",
+                deserialize_with = "from_string_into_date"
+            )
+        )]
+        Date<Utc>,
+        #[cfg_attr(
+            feature = "serde_support",
+            serde(
+                serialize_with = "from_date_into_string",
+                deserialize_with = "from_string_into_date"
+            )
+        )]
+        Date<Utc>,
+    ),
 }
 
 impl EventPeriod {

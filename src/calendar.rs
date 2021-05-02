@@ -1,7 +1,10 @@
 use super::event::{occurrence::EventOccurrence, Event};
 use chrono::{Date, Utc};
+#[cfg(feature = "serde_support")]
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Default)]
+#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
 pub struct Calendar {
     events: Vec<Event>,
 }
