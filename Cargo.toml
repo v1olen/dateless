@@ -1,6 +1,6 @@
 [package]
 name = "dateless"
-version = "0.2.2"
+version = "0.2.3"
 authors = ["v1olen <v1olen@v-sn.io>"]
 edition = "2018"
 description = "Events & calendar library for Rust"
