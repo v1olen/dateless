@@ -1,4 +1,4 @@
-use chrono::{Date, DateTime, Duration, NaiveDate, Utc};
+use chrono::{Date, DateTime, Duration, NaiveDate, NaiveTime, Utc};
 
 #[cfg(feature = "serde_support")]
 use chrono::serde::ts_seconds;
@@ -40,7 +40,6 @@ pub enum EventPeriod {
 impl EventPeriod {
     pub fn contains(&self, date: Date<Utc>) -> bool {
         let period = self.clone();
-        use chrono::NaiveTime;
 
         match period {
             Self::StartEnd(start, end) => {
@@ -186,6 +185,13 @@ impl EventPeriod {
                 Some(self.same_with_new_start_day(new_date))
             }
             _ => None,
+        }
+    }
+
+    pub fn get_date_time_start(&self) -> DateTime<Utc> {
+        match self.clone() {
+            Self::StartEnd(start, _) => start.clone(),
+            Self::WholeDays(start, _) => start.and_time(NaiveTime::from_hms(0, 0, 0)).unwrap(),
         }
     }
 }

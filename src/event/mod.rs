@@ -2,7 +2,8 @@ mod cyclicity;
 pub mod occurrence;
 mod period;
 
-use chrono::{Date, Utc};
+use crate::chrono::DateTimeDef;
+use chrono::{Date, DateTime, Utc};
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
@@ -17,49 +18,46 @@ pub struct Event {
     description: Option<String>,
     period: EventPeriod,
     cyclicity: Option<EventCyclicity>,
+    exceptions: Vec<DateTimeDef>,
 }
 
 impl Event {
     pub fn get_occurrence_at(&self, date: Date<Utc>) -> Option<EventOccurrence> {
-        if self.period.contains(date) {
-            return Some(self.create_occurrence(&self.period));
-        }
+        use EventCyclicity::*;
 
-        if let Some(cyclicity) = &self.cyclicity {
-            if self.period.starts_before(date) {
-                use EventCyclicity::*;
+        let period = if self.period.contains(date) {
+            self.period.clone()
+        } else if self.may_any_next_period_contains(date) {
+            let new_start: Option<EventPeriod> = match self.cyclicity.as_ref().unwrap() {
+                EveryDay => Some(self.period.same_with_new_start_day(date)),
+                EveryWeek => self.period.same_with_new_start_week(date),
+                EveryMonth => self.period.same_with_new_start_month(date),
+                EveryYear => self.period.same_with_new_start_year(date),
+                Custom(_) => None,
+            };
 
-                match cyclicity {
-                    EveryDay => {
-                        return Some(
-                            self.create_occurrence(&self.period.same_with_new_start_day(date)),
-                        );
-                    }
-                    EveryWeek => {
-                        let new_start = &self.period.same_with_new_start_week(date);
-                        if let Some(new_start) = new_start {
-                            return Some(self.create_occurrence(&new_start));
-                        }
-                    }
-                    EveryMonth => {
-                        let new_start = &self.period.same_with_new_start_month(date);
-                        if let Some(new_start) = new_start {
-                            return Some(self.create_occurrence(&new_start));
-                        }
-                    }
-                    EveryYear => {
-                        let new_start = &self.period.same_with_new_start_year(date);
-                        if let Some(new_start) = new_start {
-                            return Some(self.create_occurrence(&new_start));
-                        }
-                    }
-                    Custom(_) => {
-                        unimplemented!()
-                    }
-                }
+            if new_start.is_none() {
+                return None;
+            }
+
+            new_start.unwrap()
+        } else {
+            return None;
+        };
+
+        let occurrence = self.create_occurrence(&period);
+
+        for exception in &self.exceptions {
+            if exception.0 == occurrence.period.get_date_time_start() {
+                return None;
             }
         }
-        None
+
+        return Some(occurrence);
+    }
+
+    fn may_any_next_period_contains(&self, date: Date<Utc>) -> bool {
+        self.cyclicity.is_some() && self.period.starts_before(date)
     }
 
     fn create_occurrence(&self, period: &EventPeriod) -> EventOccurrence {

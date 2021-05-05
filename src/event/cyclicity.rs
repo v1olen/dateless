@@ -22,24 +22,20 @@ pub enum EventCustomCyclicity {
     EveryNDays {
         n: u64,
         ends: Option<EventCyclicityEnd>,
-        exceptions: DateDef,
     },
     EveryNWeeks {
         table: EventWeekCyclicityTable,
         n: u64,
         ends: Option<EventCyclicityEnd>,
-        exceptions: DateDef,
     },
     EveryNMonths {
         kind: EventMonthCyclicityType,
         n: u64,
         ends: Option<EventCyclicityEnd>,
-        exceptions: DateDef,
     },
     EveryNYears {
         n: u64,
         ends: Option<EventCyclicityEnd>,
-        exceptions: DateDef,
     },
 }
 

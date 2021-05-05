@@ -21,3 +21,9 @@ pub struct DateDef(
     )]
     Date<Utc>,
 );
+
+#[derive(Debug)]
+#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
+pub struct DateTimeDef(
+    #[cfg_attr(feature = "serde_support", serde(with = "ts_seconds"))] pub DateTime<Utc>,
+);
