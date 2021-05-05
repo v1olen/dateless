@@ -40,11 +40,22 @@ pub enum EventPeriod {
 impl EventPeriod {
     pub fn contains(&self, date: Date<Utc>) -> bool {
         let period = self.clone();
+        use chrono::NaiveTime;
 
         match period {
             Self::StartEnd(start, end) => {
-                let date = date.and_time(Utc::now().time()).unwrap();
-                !((date - start).num_milliseconds() < 0 || (end - date).num_milliseconds() < 0)
+                {
+                    let date = date.and_time(NaiveTime::from_hms(0, 0, 0)).unwrap();
+                    if !((start - date).num_milliseconds() >= 0
+                        || (end - date).num_milliseconds() > 0)
+                    {
+                        return false;
+                    }
+                }
+                let date = (date + Duration::days(1))
+                    .and_time(Utc::now().time())
+                    .unwrap();
+                (start - date).num_milliseconds() < 0
             }
             Self::WholeDays(start, end) => {
                 !((date - start).num_milliseconds() < 0 || (end - date).num_milliseconds() < 0)
