@@ -77,16 +77,3 @@ pub enum EventMonthCyclicityType {
     WeekDay,
     MonthDay,
 }
-
-#[derive(Debug)]
-#[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
-pub struct DateDef(
-    #[cfg_attr(
-        feature = "serde_support",
-        serde(
-            serialize_with = "from_date_into_string",
-            deserialize_with = "from_string_into_date"
-        )
-    )]
-    Date<Utc>,
-);

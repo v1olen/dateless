@@ -89,6 +89,7 @@ It prints to `stdout`:
 mod codegen;
 
 mod calendar;
+mod chrono;
 mod event;
 pub mod prelude;
 
