@@ -19,6 +19,6 @@ typetag = { optional = true, version = "0.1.7" }
 chrono  = { optional = true, version = "0.4.19", features = ["serde"] }
 
 [features]
-default = []
+default = ["serde_support"]
 
 serde_support = ["serde", "chrono", "typetag"]
