@@ -22,3 +22,6 @@ chrono  = { optional = true, version = "0.4.19", features = ["serde"] }
 default = ["serde_support"]
 
 serde_support = ["serde", "chrono", "typetag"]
+
+[dev-dependencies]
+serde_json = "1.0.64"
