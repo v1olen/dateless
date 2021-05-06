@@ -15,6 +15,18 @@ macro_rules! bind_partial_filler {
         }
     };
 }
+
+#[macro_export]
+macro_rules! bind_partial_filler_boxed {
+    ($name:ident, $field:ident, $type:ident) => {
+        fn $name(self, $field: Box<dyn $type>) -> Self {
+            let $field = Some($field);
+
+            Self { $field, ..self }
+        }
+    };
+}
+
 #[macro_export]
 macro_rules! bind_partial_filler_default {
     ($name:ident, $field:ident) => {
@@ -25,6 +37,15 @@ macro_rules! bind_partial_filler_default {
                 $field,
                 ..Default::default()
             }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! bind_partial_filler_cyclicity {
+    ($name:ident, $type:ident) => {
+        pub fn $name(self) -> Self {
+            self.with_cyclicity(Box::new($type))
         }
     };
 }
