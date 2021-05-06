@@ -37,7 +37,7 @@ fn main() {
 
     let event = EventPartial::new(String::from("Anne's birthday"))
         .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
-        .with_cyclicity(EventCyclicity::EveryWeek)
+        .weekly()
         .complete();
 
     calendar.add_event(event);

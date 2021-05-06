@@ -13,6 +13,7 @@ repository = "https://gitlab.com/v1olen/dateless"
 chrono = { version = "0.4.19", features = ["serde"] }
 optfield = "0.2.0"
 serde = { optional = true, version = "1.0.125", features = ["derive"] }
+typetag = { optional = true, version = "0.1.7" }
 
 [target.'cfg(feature = "serde_support")'.dependencies]
 chrono  = { optional = true, version = "0.4.19", features = ["serde"] }
@@ -20,4 +21,4 @@ chrono  = { optional = true, version = "0.4.19", features = ["serde"] }
 [features]
 default = []
 
-serde_support = ["serde", "chrono"]
+serde_support = ["serde", "chrono", "typetag"]
