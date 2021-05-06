@@ -3,16 +3,21 @@ pub mod occurrence;
 mod period;
 
 use crate::chrono::DateTimeDef;
-use chrono::{Date, DateTime, Utc};
+use chrono::{Date, Utc};
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
 pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::EventPeriod};
 
-#[derive(OptionalStruct, Debug, Default)]
+use optfield::optfield;
+
+#[optfield(
+    pub EventPartial,
+    merge_fn = pub,
+    attrs,
+)]
+#[derive(Debug, Default)]
 #[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
-#[optional_name = "EventPartial"]
-#[optional_derive(Debug, Default)]
 pub struct Event {
     name: String,
     description: Option<String>,
@@ -78,7 +83,7 @@ impl EventPartial {
 
     pub fn complete(self) -> Event {
         let mut event: Event = Default::default();
-        event.apply_options(self);
+        event.merge_opt(self);
         event
     }
 }
