@@ -1,4 +1,4 @@
-use super::EventPeriodDef;
+use super::PeriodDef;
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
@@ -7,5 +7,5 @@ use serde::{Deserialize, Serialize};
 pub struct EventOccurrence {
     pub name: String,
     pub description: Option<String>,
-    pub period: EventPeriodDef,
+    pub period: PeriodDef,
 }

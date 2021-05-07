@@ -10,13 +10,13 @@ use serde::{Deserialize, Serialize};
 use crate::serde::{from_date_into_string, from_string_into_date};
 
 #[cfg_attr(feature = "serde_support", typetag::serde(tag = "type"))]
-pub trait EventPeriod: std::fmt::Debug {
+pub trait Period: std::fmt::Debug {
     fn contains(&self, date: Date<Utc>) -> bool;
     fn get_date_time_start(&self) -> DateTime<Utc>;
     fn starts_before(&self, date: Date<Utc>) -> bool;
-    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn EventPeriod>;
+    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn Period>;
     // Todo: Create macro for cloned
-    fn cloned(&self) -> Box<dyn EventPeriod>;
+    fn cloned(&self) -> Box<dyn Period>;
     fn as_weekdays(&self) -> (u32, u32);
     fn as_days_of_month(&self) -> (u32, u32);
     fn as_months(&self) -> (u32, u32);
@@ -25,9 +25,9 @@ pub trait EventPeriod: std::fmt::Debug {
 
 #[derive(Debug)]
 #[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
-pub struct EventPeriodDef(pub Box<dyn EventPeriod>);
+pub struct PeriodDef(pub Box<dyn Period>);
 
-impl Default for EventPeriodDef {
+impl Default for PeriodDef {
     fn default() -> Self {
         Self(Box::new(WholeDays(
             Utc::today(),
@@ -58,7 +58,7 @@ pub struct WholeDays(
 );
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventPeriod for WholeDays {
+impl Period for WholeDays {
     fn contains(&self, date: Date<Utc>) -> bool {
         !((date - self.0).num_milliseconds() < 0 || (self.1 - date).num_milliseconds() < 0)
     }
@@ -71,7 +71,7 @@ impl EventPeriod for WholeDays {
         (self.0 - date).num_milliseconds() < 0
     }
 
-    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn EventPeriod> {
+    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn Period> {
         let total_duration = self.1 - self.0;
         Box::new(Self(date, date + total_duration))
     }
@@ -103,7 +103,7 @@ impl EventPeriod for WholeDays {
         Date::from_utc(NaiveDate::from_ymd(self.0.year(), month, self.0.day()), Utc)
     }
 
-    fn cloned(&self) -> Box<dyn EventPeriod> {
+    fn cloned(&self) -> Box<dyn Period> {
         Box::new(self.clone())
     }
 }
@@ -116,7 +116,7 @@ pub struct StartEnd(
 );
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventPeriod for StartEnd {
+impl Period for StartEnd {
     fn contains(&self, date: Date<Utc>) -> bool {
         {
             let date = date.and_time(NaiveTime::from_hms(0, 0, 0)).unwrap();
@@ -140,7 +140,7 @@ impl EventPeriod for StartEnd {
         (self.0 - date).num_milliseconds() < 0
     }
 
-    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn EventPeriod> {
+    fn with_new_start(&self, date: Date<Utc>) -> Box<dyn Period> {
         let total_duration = self.1 - self.0;
         let time_at_start = self.0.time();
 
@@ -176,7 +176,7 @@ impl EventPeriod for StartEnd {
         Date::from_utc(NaiveDate::from_ymd(self.0.year(), month, self.0.day()), Utc)
     }
 
-    fn cloned(&self) -> Box<dyn EventPeriod> {
+    fn cloned(&self) -> Box<dyn Period> {
         Box::new(self.clone())
     }
 }

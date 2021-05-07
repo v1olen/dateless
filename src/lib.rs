@@ -100,4 +100,4 @@ mod test;
 mod serde;
 
 pub use calendar::Calendar;
-pub use event::{Event, EventCyclicity, EventOccurrence, EventPartial, EventPeriod};
+pub use event::{Event, EventCyclicity, EventOccurrence, EventPartial, Period};

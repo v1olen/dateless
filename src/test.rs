@@ -1,5 +1,5 @@
 use crate::{
-    event::{EventPeriodDef, StartEnd, WholeDays},
+    event::{PeriodDef, StartEnd, WholeDays},
     prelude::*,
 };
 
@@ -22,7 +22,7 @@ fn one_day_and_one_time_date() {
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriodDef(Box::new(WholeDays(today, today))),
+        period: PeriodDef(Box::new(WholeDays(today, today))),
     }])
     .unwrap();
 
@@ -58,7 +58,7 @@ fn one_hour_and_one_time_date() {
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriodDef(Box::new(StartEnd(date_start, date_end))),
+        period: PeriodDef(Box::new(StartEnd(date_start, date_end))),
     }])
     .unwrap();
 
@@ -97,7 +97,7 @@ fn subtract_datetime_from_date() {
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriodDef(Box::new(StartEnd(date_start, date_end))),
+        period: PeriodDef(Box::new(StartEnd(date_start, date_end))),
     }])
     .unwrap();
 
