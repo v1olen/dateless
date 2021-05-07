@@ -1,4 +1,4 @@
-use chrono::Utc;
+use chrono::{Duration, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
@@ -7,9 +7,9 @@ use serde::{Deserialize, Serialize};
 pub trait EventCyclicity: std::fmt::Debug {
     fn same_period_at(
         &self,
-        same_period: super::EventPeriod,
+        same_period: Box<dyn super::EventPeriod>,
         at_date: chrono::Date<Utc>,
-    ) -> Option<super::EventPeriod>;
+    ) -> Option<Box<dyn super::EventPeriod>>;
 }
 
 #[derive(Debug)]
@@ -20,10 +20,10 @@ pub struct DailyCycle;
 impl EventCyclicity for DailyCycle {
     fn same_period_at(
         &self,
-        same_period: super::EventPeriod,
+        same_period: Box<dyn super::EventPeriod>,
         at_date: chrono::Date<Utc>,
-    ) -> Option<super::EventPeriod> {
-        Some(same_period.same_with_new_start_day(at_date))
+    ) -> Option<Box<dyn super::EventPeriod>> {
+        Some(same_period.with_new_start(at_date))
     }
 }
 
@@ -35,10 +35,21 @@ pub struct WeeklyCycle;
 impl EventCyclicity for WeeklyCycle {
     fn same_period_at(
         &self,
-        same_period: super::EventPeriod,
+        same_period: Box<dyn super::EventPeriod>,
         at_date: chrono::Date<Utc>,
-    ) -> Option<super::EventPeriod> {
-        same_period.same_with_new_start_week(at_date)
+    ) -> Option<Box<dyn super::EventPeriod>> {
+        let (starting_weekday, ending_weekday) = same_period.as_weekdays();
+        use chrono::Datelike;
+
+        match at_date.weekday().number_from_monday() {
+            value if value >= starting_weekday && value <= ending_weekday => {
+                let day_difference = (value - starting_weekday) as i64;
+                let at_date = at_date - Duration::days(day_difference);
+
+                Some(same_period.with_new_start(at_date))
+            }
+            _ => None,
+        }
     }
 }
 
@@ -50,10 +61,22 @@ pub struct MonthlyCycle;
 impl EventCyclicity for MonthlyCycle {
     fn same_period_at(
         &self,
-        same_period: super::EventPeriod,
+        same_period: Box<dyn super::EventPeriod>,
         at_date: chrono::Date<Utc>,
-    ) -> Option<super::EventPeriod> {
-        same_period.same_with_new_start_month(at_date)
+    ) -> Option<Box<dyn super::EventPeriod>> {
+        use chrono::Datelike;
+
+        let (starting_month_day, ending_month_day) = same_period.as_days_of_month();
+
+        match at_date.day() {
+            value if value >= starting_month_day && value <= ending_month_day => {
+                let day_difference = (value - starting_month_day) as i64;
+                let at_date = at_date - Duration::days(day_difference);
+
+                Some(same_period.with_new_start(at_date))
+            }
+            _ => None,
+        }
     }
 }
 
@@ -65,10 +88,29 @@ pub struct AnnualCycle;
 impl EventCyclicity for AnnualCycle {
     fn same_period_at(
         &self,
-        same_period: super::EventPeriod,
+        same_period: Box<dyn super::EventPeriod>,
         at_date: chrono::Date<Utc>,
-    ) -> Option<super::EventPeriod> {
-        same_period.same_with_new_start_year(at_date)
+    ) -> Option<Box<dyn super::EventPeriod>> {
+        use chrono::Datelike;
+
+        let (starting_month, ending_month) = same_period.as_months();
+        let (starting_month_day, ending_month_day) = same_period.as_days_of_month();
+        let day_difference = at_date - same_period.with_new_month(at_date.month());
+
+        if at_date.day() < starting_month_day || at_date.day() > ending_month_day {
+            return None;
+        }
+
+        let day_difference = day_difference.num_days();
+
+        match at_date.month() {
+            value if value >= starting_month && value <= ending_month => {
+                let at_date = at_date - Duration::days(day_difference);
+
+                Some(same_period.with_new_start(at_date))
+            }
+            _ => None,
+        }
     }
 }
 
