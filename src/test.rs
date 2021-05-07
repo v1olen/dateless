@@ -14,7 +14,7 @@ fn one_day_and_one_time_date() {
     let tomorrow = today + Duration::days(1);
 
     let event = EventPartial::new(String::from("Date"))
-        .whole_days(today, today)
+        .whole_day(today)
         .complete();
 
     calendar.add_event(event);

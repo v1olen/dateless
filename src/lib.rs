@@ -35,7 +35,7 @@ fn main() {
     let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
-        .whole_days(Utc::today(), Utc::today())
+        .whole_day(Utc::today())
         .daily()
         .complete();
 
@@ -56,7 +56,7 @@ fn main() {
     let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
-        .whole_days(Utc::today(), Utc::today())
+        .whole_day(Utc::today())
         .daily()
         .complete();
 
