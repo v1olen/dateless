@@ -1,4 +1,4 @@
-use chrono::{Date, DateTime, Duration, NaiveDate, NaiveTime, Utc};
+use chrono::{Date, DateTime, Datelike, Duration, NaiveDate, NaiveTime, Utc};
 
 #[cfg(feature = "serde_support")]
 use chrono::serde::ts_seconds;
@@ -50,8 +50,6 @@ impl Period for StartEnd {
     }
 
     fn as_weekdays(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (
             self.0.date().weekday().number_from_monday(),
             self.1.date().weekday().number_from_monday(),
@@ -59,20 +57,14 @@ impl Period for StartEnd {
     }
 
     fn as_days_of_month(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (self.0.day(), self.1.day())
     }
 
     fn as_months(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (self.0.date().day(), self.1.date().day())
     }
 
     fn with_new_month(&self, month: u32) -> Date<Utc> {
-        use chrono::Datelike;
-
         Date::from_utc(NaiveDate::from_ymd(self.0.year(), month, self.0.day()), Utc)
     }
 

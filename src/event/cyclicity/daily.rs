@@ -1,4 +1,4 @@
-use chrono::Utc;
+use chrono::{Date, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
@@ -15,7 +15,7 @@ impl Cyclicity for DailyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn Period>,
-        at_date: chrono::Date<Utc>,
+        at_date: Date<Utc>,
     ) -> Option<Box<dyn Period>> {
         Some(same_period.with_new_start(at_date))
     }
