@@ -9,7 +9,7 @@ use chrono::{Date, DateTime, Utc};
 use serde::{Deserialize, Serialize};
 
 pub use self::period::PeriodDef;
-pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::Period};
+pub use self::{cyclicity::Cyclicity, occurrence::EventOccurrence, period::Period};
 
 use cyclicity::*;
 
@@ -27,7 +27,7 @@ use optfield::optfield;
 pub struct Event {
     name: String,
     description: Option<String>,
-    cyclicity: Option<Box<dyn EventCyclicity>>,
+    cyclicity: Option<Box<dyn Cyclicity>>,
     exceptions: Vec<DateTimeDef>,
     period: PeriodDef,
 }
@@ -76,7 +76,7 @@ impl EventPartial {
 
     bind_partial_filler!(with_description, description);
 
-    bind_partial_filler_boxed!(with_cyclicity, cyclicity, EventCyclicity);
+    bind_partial_filler_boxed!(with_cyclicity, cyclicity, Cyclicity);
 
     bind_partial_trait_filler!(daily, DailyCycle, with_cyclicity);
     bind_partial_trait_filler!(weekly, WeeklyCycle, with_cyclicity);
