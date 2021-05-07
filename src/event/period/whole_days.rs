@@ -1,4 +1,4 @@
-use chrono::{Date, DateTime, NaiveDate, NaiveTime, Utc};
+use chrono::{Date, DateTime, Datelike, NaiveDate, NaiveTime, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
@@ -49,8 +49,6 @@ impl Period for WholeDays {
     }
 
     fn as_weekdays(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (
             self.0.weekday().number_from_monday(),
             self.1.weekday().number_from_monday(),
@@ -58,20 +56,14 @@ impl Period for WholeDays {
     }
 
     fn as_days_of_month(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (self.0.day(), self.1.day())
     }
 
     fn as_months(&self) -> (u32, u32) {
-        use chrono::Datelike;
-
         (self.0.month(), self.1.month())
     }
 
     fn with_new_month(&self, month: u32) -> Date<Utc> {
-        use chrono::Datelike;
-
         Date::from_utc(NaiveDate::from_ymd(self.0.year(), month, self.0.day()), Utc)
     }
 

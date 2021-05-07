@@ -1,4 +1,4 @@
-use chrono::{Duration, Utc};
+use chrono::{Date, Datelike, Duration, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
@@ -15,10 +15,10 @@ impl Cyclicity for WeeklyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn Period>,
-        at_date: chrono::Date<Utc>,
+        at_date: Date<Utc>,
     ) -> Option<Box<dyn Period>> {
         let (starting_weekday, ending_weekday) = same_period.as_weekdays();
-        use chrono::Datelike;
+        use Datelike;
 
         match at_date.weekday().number_from_monday() {
             value if value >= starting_weekday && value <= ending_weekday => {

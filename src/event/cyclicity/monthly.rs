@@ -1,4 +1,4 @@
-use chrono::{Duration, Utc};
+use chrono::{Date, Datelike, Duration, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
@@ -15,10 +15,8 @@ impl Cyclicity for MonthlyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn Period>,
-        at_date: chrono::Date<Utc>,
+        at_date: Date<Utc>,
     ) -> Option<Box<dyn Period>> {
-        use chrono::Datelike;
-
         let (starting_month_day, ending_month_day) = same_period.as_days_of_month();
 
         match at_date.day() {

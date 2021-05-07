@@ -1,12 +1,15 @@
-use chrono::Utc;
+use chrono::{Date, Utc};
+use std::fmt::Debug;
+
+use super::Period;
 
 #[cfg_attr(feature = "serde_support", typetag::serde(tag = "type"))]
-pub trait Cyclicity: std::fmt::Debug {
+pub trait Cyclicity: Debug {
     fn same_period_at(
         &self,
-        same_period: Box<dyn super::Period>,
-        at_date: chrono::Date<Utc>,
-    ) -> Option<Box<dyn super::Period>>;
+        same_period: Box<dyn Period>,
+        at_date: Date<Utc>,
+    ) -> Option<Box<dyn Period>>;
 }
 
 mod annual;

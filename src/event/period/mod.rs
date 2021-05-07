@@ -1,10 +1,11 @@
 use chrono::{Date, DateTime, Utc};
+use std::fmt::Debug;
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "serde_support", typetag::serde(tag = "type"))]
-pub trait Period: std::fmt::Debug {
+pub trait Period: Debug {
     fn contains(&self, date: Date<Utc>) -> bool;
     fn get_date_time_start(&self) -> DateTime<Utc>;
     fn starts_before(&self, date: Date<Utc>) -> bool;
