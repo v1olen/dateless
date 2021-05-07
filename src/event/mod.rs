@@ -93,6 +93,10 @@ impl EventPartial {
         self.with_period(PeriodDef(Box::new(WholeDays(from, to))))
     }
 
+    pub fn whole_day(self, from_to: Date<Utc>) -> Self {
+        self.with_period(PeriodDef(Box::new(WholeDays(from_to, from_to))))
+    }
+
     pub fn complete(self) -> Event {
         let mut event: Event = Default::default();
         event.merge_opt(self);
