@@ -1,4 +1,8 @@
-use crate::prelude::*;
+use crate::{
+    event::{EventPeriodDef, StartEnd, WholeDays},
+    prelude::*,
+};
+
 use chrono::{DateTime, Duration, Utc};
 
 #[test]
@@ -10,20 +14,30 @@ fn one_day_and_one_time_date() {
     let tomorrow = today + Duration::days(1);
 
     let event = EventPartial::new(String::from("Date"))
-        .with_period(EventPeriod::WholeDays(today, today))
+        .whole_days(today, today)
         .complete();
 
     calendar.add_event(event);
 
-    let expected_occurrence = vec![EventOccurrence {
+    let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriod::WholeDays(today, today),
-    }];
+        period: EventPeriodDef(Box::new(WholeDays(today, today))),
+    }])
+    .unwrap();
 
-    assert_ne!(calendar.day(yesterday), expected_occurrence);
-    assert_eq!(calendar.day(today), expected_occurrence);
-    assert_ne!(calendar.day(tomorrow), expected_occurrence);
+    assert_ne!(
+        serde_json::to_string(&calendar.day(yesterday)).unwrap(),
+        expected_occurrence,
+    );
+    assert_eq!(
+        serde_json::to_string(&calendar.day(today)).unwrap(),
+        expected_occurrence,
+    );
+    assert_ne!(
+        serde_json::to_string(&calendar.day(tomorrow)).unwrap(),
+        expected_occurrence,
+    );
 }
 
 #[test]
@@ -36,20 +50,30 @@ fn one_hour_and_one_time_date() {
 
     let (date_start, date_end) = (Utc::now(), Utc::now() + Duration::hours(1));
     let event = EventPartial::new(String::from("Date"))
-        .with_period(EventPeriod::StartEnd(date_start, date_end))
+        .from_to(date_start, date_end)
         .complete();
 
     calendar.add_event(event);
 
-    let expected_occurrence = vec![EventOccurrence {
+    let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriod::StartEnd(date_start, date_end),
-    }];
+        period: EventPeriodDef(Box::new(StartEnd(date_start, date_end))),
+    }])
+    .unwrap();
 
-    assert_ne!(calendar.day(yesterday), expected_occurrence);
-    assert_eq!(calendar.day(today), expected_occurrence);
-    assert_ne!(calendar.day(tomorrow), expected_occurrence);
+    assert_ne!(
+        serde_json::to_string(&calendar.day(yesterday)).unwrap(),
+        expected_occurrence,
+    );
+    assert_eq!(
+        serde_json::to_string(&calendar.day(today)).unwrap(),
+        expected_occurrence,
+    );
+    assert_ne!(
+        serde_json::to_string(&calendar.day(tomorrow)).unwrap(),
+        expected_occurrence,
+    );
 }
 
 #[test]
@@ -65,19 +89,32 @@ fn subtract_datetime_from_date() {
     let date_end = DateTime::from_utc(two_days_later.naive_utc().and_hms(0, 0, 0), Utc);
 
     let event = EventPartial::new(String::from("Date"))
-        .with_period(EventPeriod::StartEnd(date_start, date_end))
+        .from_to(date_start, date_end)
         .complete();
 
     calendar.add_event(event);
 
-    let expected_occurrence = vec![EventOccurrence {
+    let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
         name: "Date".into(),
         description: None,
-        period: EventPeriod::StartEnd(date_start, date_end),
-    }];
+        period: EventPeriodDef(Box::new(StartEnd(date_start, date_end))),
+    }])
+    .unwrap();
 
-    assert_ne!(calendar.day(two_days_later), expected_occurrence);
-    assert_eq!(calendar.day(today), expected_occurrence);
-    assert_eq!(calendar.day(tomorrow), expected_occurrence);
-    assert_ne!(calendar.day(yesterday), expected_occurrence);
+    assert_ne!(
+        serde_json::to_string(&calendar.day(two_days_later)).unwrap(),
+        expected_occurrence,
+    );
+    assert_eq!(
+        serde_json::to_string(&calendar.day(today)).unwrap(),
+        expected_occurrence,
+    );
+    assert_eq!(
+        serde_json::to_string(&calendar.day(tomorrow)).unwrap(),
+        expected_occurrence,
+    );
+    assert_ne!(
+        serde_json::to_string(&calendar.day(yesterday)).unwrap(),
+        expected_occurrence,
+    );
 }

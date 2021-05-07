@@ -3,17 +3,17 @@ pub mod occurrence;
 mod period;
 
 use crate::chrono::DateTimeDef;
-use chrono::{Date, Utc};
+use chrono::{Date, DateTime, Utc};
 
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
-pub use self::{
-    cyclicity::EventCyclicity,
-    cyclicity::{AnnualCycle, DailyCycle, MonthlyCycle, WeeklyCycle},
-    occurrence::EventOccurrence,
-    period::EventPeriod,
-};
+pub use self::period::EventPeriodDef;
+pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::EventPeriod};
+
+use cyclicity::*;
+
+pub use period::{StartEnd, WholeDays};
 
 use optfield::optfield;
 
@@ -27,30 +27,30 @@ use optfield::optfield;
 pub struct Event {
     name: String,
     description: Option<String>,
-    period: EventPeriod,
     cyclicity: Option<Box<dyn EventCyclicity>>,
     exceptions: Vec<DateTimeDef>,
+    period: EventPeriodDef,
 }
 
 impl Event {
     pub fn get_occurrence_at(&self, date: Date<Utc>) -> Option<EventOccurrence> {
-        let period = if self.period.contains(date) {
-            self.period.clone()
+        let period = if self.period.0.contains(date) {
+            self.period.0.cloned()
         } else if self.may_any_next_period_contains(date) {
-            let new_start: Option<EventPeriod> = match &self.cyclicity {
-                Some(value) => value.same_period_at(self.period.clone(), date),
+            let new_start: Option<Box<dyn EventPeriod>> = match &self.cyclicity {
+                Some(value) => value.same_period_at(self.period.0.cloned(), date),
                 _ => return None,
             };
 
-            new_start.unwrap()
+            new_start.unwrap().cloned()
         } else {
             return None;
         };
 
-        let occurrence = self.create_occurrence(&period);
+        let occurrence = self.create_occurrence(period);
 
         for exception in &self.exceptions {
-            if exception.0 == occurrence.period.get_date_time_start() {
+            if exception.0 == occurrence.period.0.get_date_time_start() {
                 return None;
             }
         }
@@ -59,14 +59,14 @@ impl Event {
     }
 
     fn may_any_next_period_contains(&self, date: Date<Utc>) -> bool {
-        self.cyclicity.is_some() && self.period.starts_before(date)
+        self.cyclicity.is_some() && self.period.0.starts_before(date)
     }
 
-    fn create_occurrence(&self, period: &EventPeriod) -> EventOccurrence {
+    fn create_occurrence(&self, period: Box<dyn EventPeriod>) -> EventOccurrence {
         return EventOccurrence {
             name: self.name.clone(),
             description: self.description.clone(),
-            period: period.clone(),
+            period: EventPeriodDef(period),
         };
     }
 }
@@ -75,14 +75,23 @@ impl EventPartial {
     bind_partial_filler_default!(new, name);
 
     bind_partial_filler!(with_description, description);
-    bind_partial_filler!(with_period, period, EventPeriod);
 
     bind_partial_filler_boxed!(with_cyclicity, cyclicity, EventCyclicity);
 
-    bind_partial_filler_cyclicity!(daily, DailyCycle);
-    bind_partial_filler_cyclicity!(weekly, WeeklyCycle);
-    bind_partial_filler_cyclicity!(monthly, MonthlyCycle);
-    bind_partial_filler_cyclicity!(annual, AnnualCycle);
+    bind_partial_trait_filler!(daily, DailyCycle, with_cyclicity);
+    bind_partial_trait_filler!(weekly, WeeklyCycle, with_cyclicity);
+    bind_partial_trait_filler!(monthly, MonthlyCycle, with_cyclicity);
+    bind_partial_trait_filler!(annual, AnnualCycle, with_cyclicity);
+
+    bind_partial_filler!(with_period, period, EventPeriodDef);
+
+    pub fn from_to(self, from: DateTime<Utc>, to: DateTime<Utc>) -> Self {
+        self.with_period(EventPeriodDef(Box::new(StartEnd(from, to))))
+    }
+
+    pub fn whole_days(self, from: Date<Utc>, to: Date<Utc>) -> Self {
+        self.with_period(EventPeriodDef(Box::new(WholeDays(from, to))))
+    }
 
     pub fn complete(self) -> Event {
         let mut event: Event = Default::default();

@@ -42,10 +42,10 @@ macro_rules! bind_partial_filler_default {
 }
 
 #[macro_export]
-macro_rules! bind_partial_filler_cyclicity {
-    ($name:ident, $type:ident) => {
+macro_rules! bind_partial_trait_filler {
+    ($name:ident, $type:ident, $method:ident) => {
         pub fn $name(self) -> Self {
-            self.with_cyclicity(Box::new($type))
+            self.$method(Box::new($type))
         }
     };
 }

@@ -3,11 +3,8 @@ fn main() {
     use dateless::prelude::*;
 
     let event = EventPartial::new(String::from("Date"))
-        .with_period(EventPeriod::StartEnd(
-            Utc::now(),
-            Utc::now() + Duration::hours(1),
-        ))
-        .weekly()
+        .from_to(Utc::now(), Utc::now() + Duration::hours(1))
+        .daily()
         .complete();
 
     println!("{}", serde_json::to_string(&event).unwrap());

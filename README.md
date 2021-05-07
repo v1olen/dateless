@@ -36,7 +36,7 @@ fn main() {
     let mut calendar = Calendar::new();
 
     let event = EventPartial::new(String::from("Anne's birthday"))
-        .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+        .whole_days(Utc::today(), Utc::today())
         .weekly()
         .complete();
 

@@ -43,7 +43,7 @@ impl Calendar {
 
        calendar.add_event(
            EventPartial::new(String::from("Anne's birthday"))
-               .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+               .whole_days(Utc::today(), Utc::today())
                .complete()
        );
        ```
@@ -65,7 +65,7 @@ impl Calendar {
 
        calendar.add_event(
            EventPartial::new(String::from("Anne's birthday"))
-               .with_period(EventPeriod::WholeDays(Utc::today(), Utc::today()))
+               .whole_days(Utc::today(), Utc::today())
                .complete()
        );
 
