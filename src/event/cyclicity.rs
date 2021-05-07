@@ -4,7 +4,7 @@ use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
 
 #[cfg_attr(feature = "serde_support", typetag::serde(tag = "type"))]
-pub trait EventCyclicity: std::fmt::Debug {
+pub trait Cyclicity: std::fmt::Debug {
     fn same_period_at(
         &self,
         same_period: Box<dyn super::Period>,
@@ -17,7 +17,7 @@ pub trait EventCyclicity: std::fmt::Debug {
 pub struct DailyCycle;
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventCyclicity for DailyCycle {
+impl Cyclicity for DailyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn super::Period>,
@@ -32,7 +32,7 @@ impl EventCyclicity for DailyCycle {
 pub struct WeeklyCycle;
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventCyclicity for WeeklyCycle {
+impl Cyclicity for WeeklyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn super::Period>,
@@ -58,7 +58,7 @@ impl EventCyclicity for WeeklyCycle {
 pub struct MonthlyCycle;
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventCyclicity for MonthlyCycle {
+impl Cyclicity for MonthlyCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn super::Period>,
@@ -85,7 +85,7 @@ impl EventCyclicity for MonthlyCycle {
 pub struct AnnualCycle;
 
 #[cfg_attr(feature = "serde_support", typetag::serde)]
-impl EventCyclicity for AnnualCycle {
+impl Cyclicity for AnnualCycle {
     fn same_period_at(
         &self,
         same_period: Box<dyn super::Period>,
@@ -122,27 +122,27 @@ impl EventCyclicity for AnnualCycle {
 // pub enum EventCustomCyclicity {
 //     EveryNDays {
 //         n: u64,
-//         ends: Option<EventCyclicityEnd>,
+//         ends: Option<CyclicityEnd>,
 //     },
 //     EveryNWeeks {
 //         table: EventWeekCyclicityTable,
 //         n: u64,
-//         ends: Option<EventCyclicityEnd>,
+//         ends: Option<CyclicityEnd>,
 //     },
 //     EveryNMonths {
 //         kind: EventMonthCyclicityType,
 //         n: u64,
-//         ends: Option<EventCyclicityEnd>,
+//         ends: Option<CyclicityEnd>,
 //     },
 //     EveryNYears {
 //         n: u64,
-//         ends: Option<EventCyclicityEnd>,
+//         ends: Option<CyclicityEnd>,
 //     },
 // }
 
 // #[derive(Debug)]
 // #[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
-// pub enum EventCyclicityEnd {
+// pub enum CyclicityEnd {
 //     OnDay(
 //         #[cfg_attr(
 //             feature = "serde_support",
