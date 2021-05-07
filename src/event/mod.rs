@@ -8,8 +8,8 @@ use chrono::{Date, DateTime, Utc};
 #[cfg(feature = "serde_support")]
 use serde::{Deserialize, Serialize};
 
-pub use self::period::EventPeriodDef;
-pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::EventPeriod};
+pub use self::period::PeriodDef;
+pub use self::{cyclicity::EventCyclicity, occurrence::EventOccurrence, period::Period};
 
 use cyclicity::*;
 
@@ -29,7 +29,7 @@ pub struct Event {
     description: Option<String>,
     cyclicity: Option<Box<dyn EventCyclicity>>,
     exceptions: Vec<DateTimeDef>,
-    period: EventPeriodDef,
+    period: PeriodDef,
 }
 
 impl Event {
@@ -37,7 +37,7 @@ impl Event {
         let period = if self.period.0.contains(date) {
             self.period.0.cloned()
         } else if self.may_any_next_period_contains(date) {
-            let new_start: Option<Box<dyn EventPeriod>> = match &self.cyclicity {
+            let new_start: Option<Box<dyn Period>> = match &self.cyclicity {
                 Some(value) => value.same_period_at(self.period.0.cloned(), date),
                 _ => return None,
             };
@@ -62,11 +62,11 @@ impl Event {
         self.cyclicity.is_some() && self.period.0.starts_before(date)
     }
 
-    fn create_occurrence(&self, period: Box<dyn EventPeriod>) -> EventOccurrence {
+    fn create_occurrence(&self, period: Box<dyn Period>) -> EventOccurrence {
         return EventOccurrence {
             name: self.name.clone(),
             description: self.description.clone(),
-            period: EventPeriodDef(period),
+            period: PeriodDef(period),
         };
     }
 }
@@ -83,14 +83,14 @@ impl EventPartial {
     bind_partial_trait_filler!(monthly, MonthlyCycle, with_cyclicity);
     bind_partial_trait_filler!(annual, AnnualCycle, with_cyclicity);
 
-    bind_partial_filler!(with_period, period, EventPeriodDef);
+    bind_partial_filler!(with_period, period, PeriodDef);
 
     pub fn from_to(self, from: DateTime<Utc>, to: DateTime<Utc>) -> Self {
-        self.with_period(EventPeriodDef(Box::new(StartEnd(from, to))))
+        self.with_period(PeriodDef(Box::new(StartEnd(from, to))))
     }
 
     pub fn whole_days(self, from: Date<Utc>, to: Date<Utc>) -> Self {
-        self.with_period(EventPeriodDef(Box::new(WholeDays(from, to))))
+        self.with_period(PeriodDef(Box::new(WholeDays(from, to))))
     }
 
     pub fn complete(self) -> Event {
