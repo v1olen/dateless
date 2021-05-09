@@ -4,7 +4,7 @@ use std::fmt::Debug;
 use super::Period;
 
 #[cfg_attr(feature = "serde_support", typetag::serde(tag = "type"))]
-pub trait Cyclicity: Debug {
+pub trait Cyclicity: Debug + Send {
     fn same_period_at(
         &self,
         same_period: Box<dyn Period>,
