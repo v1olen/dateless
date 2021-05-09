@@ -42,6 +42,10 @@ impl Event {
                 _ => return None,
             };
 
+            if new_start.is_none() {
+                return None;
+            }
+
             new_start.unwrap().cloned()
         } else {
             return None;
