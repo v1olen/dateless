@@ -17,9 +17,12 @@ fn one_day_and_one_time_date() {
         .whole_day(today)
         .complete();
 
+    let event_uuid = event.uuid.clone();
+
     calendar.add_event(event);
 
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
+        origin: event_uuid,
         name: "Date".into(),
         description: None,
         period: PeriodDef(Box::new(WholeDays(today, today))),
@@ -53,9 +56,12 @@ fn one_hour_and_one_time_date() {
         .from_to(date_start, date_end)
         .complete();
 
+    let event_uuid = event.uuid.clone();
+
     calendar.add_event(event);
 
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
+        origin: event_uuid,
         name: "Date".into(),
         description: None,
         period: PeriodDef(Box::new(StartEnd(date_start, date_end))),
@@ -92,9 +98,12 @@ fn subtract_datetime_from_date() {
         .from_to(date_start, date_end)
         .complete();
 
+    let event_uuid = event.uuid.clone();
+
     calendar.add_event(event);
 
     let expected_occurrence = serde_json::to_string(&vec![EventOccurrence {
+        origin: event_uuid,
         name: "Date".into(),
         description: None,
         period: PeriodDef(Box::new(StartEnd(date_start, date_end))),

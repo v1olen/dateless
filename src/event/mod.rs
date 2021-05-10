@@ -12,10 +12,10 @@ pub use self::period::PeriodDef;
 pub use self::{cyclicity::Cyclicity, occurrence::EventOccurrence, period::Period};
 
 use cyclicity::*;
-
 pub use period::{StartEnd, WholeDays};
 
 use optfield::optfield;
+use uuid::Uuid;
 
 #[optfield(
     pub EventPartial,
@@ -25,6 +25,8 @@ use optfield::optfield;
 #[derive(Debug, Default)]
 #[cfg_attr(feature = "serde_support", derive(Serialize, Deserialize))]
 pub struct Event {
+    #[cfg_attr(feature = "serde_support", serde(default = "Uuid::new_v4"))]
+    pub uuid: Uuid,
     name: String,
     description: Option<String>,
     cyclicity: Option<Box<dyn Cyclicity>>,
@@ -68,6 +70,7 @@ impl Event {
 
     fn create_occurrence(&self, period: Box<dyn Period>) -> EventOccurrence {
         return EventOccurrence {
+            origin: self.uuid,
             name: self.name.clone(),
             description: self.description.clone(),
             period: PeriodDef(period),
@@ -103,6 +106,9 @@ impl EventPartial {
 
     pub fn complete(self) -> Event {
         let mut event: Event = Default::default();
+
+        event.uuid = Uuid::new_v4();
+
         event.merge_opt(self);
         event
     }
