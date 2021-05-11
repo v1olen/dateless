@@ -133,3 +133,18 @@ macro_rules! bind_partial_trait_filler {
         }
     };
 }
+
+#[macro_export]
+macro_rules! impl_period_boundaries {
+    ($type:ident, $pointer:ty) => {
+        impl super::WithBoundaries<$pointer> for $type {
+            fn start(&self) -> $pointer {
+                self.0
+            }
+            fn end(&self) -> $pointer {
+                self.1
+            }
+        }
+        use crate::event::period::WithBoundaries;
+    };
+}

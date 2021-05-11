@@ -31,6 +31,11 @@ impl Default for PeriodDef {
     }
 }
 
+pub trait WithBoundaries<T> {
+    fn start(&self) -> T;
+    fn end(&self) -> T;
+}
+
 mod start_end;
 mod whole_days;
 
