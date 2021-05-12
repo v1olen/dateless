@@ -73,7 +73,5 @@ impl Period for WholeDays {
         )
     }
 
-    fn cloned(&self) -> Box<dyn Period> {
-        Box::new(self.clone())
-    }
+    impl_cloned!(Period);
 }

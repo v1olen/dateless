@@ -10,7 +10,6 @@ pub trait Period: Debug + Send {
     fn get_date_time_start(&self) -> DateTime<Utc>;
     fn starts_before(&self, date: Date<Utc>) -> bool;
     fn with_new_start(&self, date: Date<Utc>) -> Box<dyn Period>;
-    // Todo: Create macro for cloned
     fn cloned(&self) -> Box<dyn Period>;
     fn as_weekdays(&self) -> (u32, u32);
     fn as_days_of_month(&self) -> (u32, u32);

@@ -148,3 +148,12 @@ macro_rules! impl_period_boundaries {
         use crate::event::period::WithBoundaries;
     };
 }
+
+#[macro_export]
+macro_rules! impl_cloned {
+    ($type:ident) => {
+        fn cloned(&self) -> Box<dyn $type> {
+            Box::new(self.clone())
+        }
+    };
+}
